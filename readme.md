@@ -147,12 +147,12 @@ We will be modifying our newly created `IndexController.java` and `Index.html` t
 
       `src/main/resources/templates/dynamic.html`
 
-       <html>
-         <head><title>Spring Boot Tutorial - Step 1</title></head>
-         <body>
-           <h1>Welcome, <span th:text="${name}" />, to the dynamic Controller</h1>
-         </body>
-       <html>
+        <html>
+          <head><title>Spring Boot Tutorial - Step 1</title></head>
+          <body>
+            <h1>Welcome, <span th:text="${name}" />, to the dynamic Controller</h1>
+          </body>
+        <html>
 
 3. Run the application and test it out.
 
