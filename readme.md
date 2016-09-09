@@ -1,10 +1,18 @@
 # Spring Boot Web - Tutorial
 
-# Step 1 - First Page
+# Introduction
 
-## Introduction
+Greetings! You are here to learn the quick run down on Spring Boot and how to build a basic Server Rendered Page (using Spring MVC) a basic RESTful API (using Spring Boot) and how to integrate basic testing.
 
-This Step in the tutorial will teach you how to implement a basic index page into a Spring Boot application. This will be a very basic implementation so that concepts are discussed.
+This tutorial will cover some basic terminology of Spring, java development, and web application development. After finishing the tutorial you will have a basic understanding of what Spring Framework has to offer, how to build a basic web application, and how to write a unit test (tested code is good code).
+
+## Who this tutorial is for
+
+This tutorial is geared towards beginners. It will attempt to cover some basic Java concepts and terminology and will provide resources to learn more about Java and Spring itself if a deeper dive is desired.
+
+## Why another tutorial
+
+This tutorial is not meant to be the best tutorial nor be better than others however this tutorial is being written in a way that can easily guide someone through the basics of Spring. We know there are already plenty of tutorials out there for Java, Spring and any technology that can be made into a tutorial but like any tutorial there is a twist we are looking to fill that others may not and writing tutorials allows for greater understanding of what is being taught.
 
 ## Terminology
 
@@ -29,154 +37,27 @@ This Step in the tutorial will teach you how to implement a basic index page int
 * MVC - MVC is an acronym that stands for Model-View-Control. This is a design pattern that is used to separate the concerns of the Data/Presentation/ Interaction of a website.
 * Controller - This is the function that will control the server side user interaction for the context path.
 * View - This is the Template that will control the presentation for the context path.
+* Java Bean - (aka Bean/POJO) - A Java bean is a java class that follows the following standards
+  * All properties are private (use [getters/setters](https://en.wikipedia.org/wiki/Mutator_method#Java_example) for access)
+  * A public [no-argument constructor](https://en.wikipedia.org/wiki/Nullary_constructor)
+
 
 ## Dependencies
 
-* spring-boot-starter-thymeleaf - This Starter enables the Spring Framework MVC (a.k.a Spring MVC) packages using the [Thymeleaf](http://www.thymeleaf.org/) templating engine. 
+* JDK 1.8
+* A Text Editor (i.e. [Atom](https://atom.io/) ) or an [IDE](https://en.wikipedia.org/wiki/Integrated_development_environment) such as [Spring Tools Suite (STS)](https://spring.io/tools)
+* [Git](https://git-scm.com/) - [Git Tutorial](https://try.github.io/levels/1/challenges/1)
 
-# Let's Begin
+# How is the tutorial structured
 
-During this step you will learn how to:
+This tutorial will walk you through step by step using Git Branches. Each step will start from the previous step allowing you to skip ahead, go back to a clean state, or look at each concept before moving on to the next step. The git commands are provided but a basic understanding of Git is advised.
 
-* Add the `spring-boot-starter-thymeleaf` package to our gradle dependency list.
-* Create a Spring Controller
-  * Serve up a static html template  
-  * Serve up a dynamic html template
-
-## Add Dependency to Gradle
-
-To complete this step we will need to add a dependency to our `build.gradle` file so that gradle will download the necessary dependency.
-
-1. Open `build.gradle`
-2. Find the line 
-
-   `compile('org.springframework.boot:spring-boot-starter-web')`
-
-   Add the following below this line
-
-   `compile('org.springframework.boot:spring-boot-starter-thymeleaf')`
-3. Download the dependency via gradle
-
-   \*Nix - `./gradlew clean build`
-
-   Windows - `gradlew.bat clean build`
-   
-## Create a Controller
-
-1. To begin we will navigate to the `src/main/java/com/example/demo` folder in our application in your favorite IDE/Editor.
-2. Create a new Folder/Package (Synonymous with each other) named `controller` (all lower case, singular)
-3. Create the Index Controller. This default controller which is served up on the `/` context path will be our static html file that we serve up.
-    
-    `src/main/java/com/example/demo/controller/IndexController.java`
-
-        package com.example.demo.controller;
-    
-        import org.springframework.stereotype.Controller;
-        import org.springframework.web.bind.annotation.RequestMapping;
-
-        @Controller
-        public class IndexController {
-
-           @RequestMapping("/")
-           public String index() {
-               return "index";
-           }
-        }
-
-## Create the Index Html
-
-1. Navigate to `src/main/resources/templates`. This is the default location that the Spring Framework will look for JSP Templates.
-2. Create a new File. 
-
-    `src/main/resources/templates/index.html`
-
-        <html>
-          <head><title>Spring Boot Tutorial - Step 1</title>
-          <body>
-            <h1>Welcome to the Index Template</h1>
-          </body>
-        </html>
-
-3. Once both the Controller and the Index file are created, run the application via the gradle task.
-
-    `./gradlew bootRun` - \*Nix users
-
-    `gradle.bat bootRun` - Windows users
-
-4. When the application has booted you will see a log entry in your terminal that states
-
-    `Tomcat started on port(s): 8080 (http)`
-
-   You may now visit [http://localhost:8080/](http://localhost:8080/)
-
-5. Validate our Controller is serving up our Template of "Welcome to the Index Template"
-
-## Modify the IndexController/Index Html to be Dynamic
-
-We will be modifying our newly created `IndexController.java` and `Index.html` to accept URL parameters to render a dynamic value onto the page. We will start with modifying the controller to accept the URL parameters.
-
-1. Make the following changes to the `IndexController`
-
-    `src/main/java/com/example/demo/controller/IndexController.java`
-
-    Add the new annotation that is needed `RequestParam` to the `import` section
-    
-        import org.springframework.stereotype.Controller;
-        import org.springframework.web.bind.annotation.RequestMapping;
-        import org.springframework.web.bind.RequestParam;
-        import org.springframework.ui.Model;
-
-    Create a new `dynamic()` method to allow for parameters to be passed into the function.
-
-        @Controller
-        public class IndexController {
-
-           @RequestMapping("/")
-           public String index(){
-               return "index";
-           }
-
-           @RequestMapping("/dynamic")
-           public String dynamic(@RequestParam(value = "name", required = false, default = "Anonymous") String name, Model model) {
-               model.addAttribute("name",name);
-               return "dynamic";
-           }
-        }
-
-2. Create a new file called `dynamic.html` in the `src/main/resources/templates/` directory.
-
-      `src/main/resources/templates/dynamic.html`
-
-        <html>
-          <head><title>Spring Boot Tutorial - Step 1</title></head>
-          <body>
-            <h1>Welcome, <span th:text="${name}" />, to the dynamic Controller</h1>
-          </body>
-        <html>
-
-3. Run the application and test it out.
-
-      `./gradlew bootRun` - for \*Nix (Mac/Linux/Unix) users;
-     
-      `./gradlew.bat bootRun` - for Windows users;
-
-   Once running you will see the Spring Boot output showing that it started up. If you do not get an error you will see the following line at the end.
-
-        .... Tomcat started on port(s): 8080 (http)
-        .... Started StarterApplication
-
-   Now you can visit our application at [http://localhost:8080/](http://localhost:8080/). By visiting the root context you will see the `Static` page. Now navigate to the new context path `/dynamic` that we created [http://localhost:8080/dynamic](http://localhost:8080/dynamic).
-
-   Once you have loaded the `dynamic` controller you will see that the text has changed to "Welcome, Anonymous, to the dynamic Controller". Now at the end of our URL add the following `?name=MYNAME` replacing `MYNAME` with your name.
-
-
-# Tutorial Branches of Content
+## Tutorial Branches of Content
 1. Checkout the branch for which step of the tutorial you wish to start.
-   1. `git checkout master`
-   2. `git checkout step/introduction` 
-   3. `git checkout step/first_page` ***currently here***
-   4. `git checkout step/first_endpoint`
-   5. `git checkout step/first_test`
+   1. `git checkout master` ***currently here***
+   2. `git checkout step/first_page` 
+   3. `git checkout step/first_endpoint`
+   4. `git checkout step/first_test`
 
 2. Once the branch you want to start from is checked out localy run the gradle command from the project's base folder.
 
